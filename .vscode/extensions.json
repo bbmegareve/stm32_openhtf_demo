@@ -1,0 +1,17 @@
+{
+  "recommendations": [
+    "ms-vscode.cpptools",
+    "marus25.cortex-debug",
+    "ms-vscode.cmake-tools",
+    "ms-vscode.makefile-tools",
+    "eamodio.gitlens",
+    "mcu-debug.debug-tracker-vscode",
+    "mcu-debug.memory-view",
+    "mcu-debug.rtos-views",
+    "mcu-debug.peripheral-viewer",
+    "bierner.markdown-mermaid",
+    "ms-python.python",
+    "ms-python.debugpy",
+  ],
+  "unwantedRecommendations": []
+}
