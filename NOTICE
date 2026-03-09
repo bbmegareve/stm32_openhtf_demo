@@ -1,7 +1,8 @@
-This project includes software developed by:
-
-- <project> (<LICENSE> License)
-- <project> (<LICENSE> License)
-- <project> (<LICENSE> License)
-
-See respective source files and upstream projects for details.
+ This project includes software developed by:
+ 
+ - stm32_openhtf_demo ([MIT License](https://opensource.org/licenses/MIT), see LICENSE)
+ - STM32C0xx HAL Driver ([BSD-3-Clause License](https://opensource.org/licenses/BSD-3-Clause), see src/Drivers/STM32C0xx_HAL_Driver/LICENSE.txt)
+ - FreeRTOS ([MIT License](https://opensource.org/licenses/MIT), see src/Middlewares/Third_Party/FreeRTOS/LICENSE.md)
+ - CMSIS ([Apache-2.0 License](https://www.apache.org/licenses/LICENSE-2.0), see src/Drivers/CMSIS/LICENSE.txt)
+ 
+ See respective source files and upstream projects for details.
