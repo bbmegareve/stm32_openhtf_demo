@@ -56,3 +56,9 @@ dkms.conf
 
 # build directory
 src/build
+
+# .github
+.github/personal.md
+
+# vscode
+.vscode/
