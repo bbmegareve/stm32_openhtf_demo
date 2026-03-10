@@ -59,7 +59,7 @@ const osThreadAttr_t defaultTask_attributes = {
 };
 /* Definitions for cli */
 osThreadId_t cliHandle;
-uint32_t bufferTaskCli[ 128 ];
+uint32_t bufferTaskCli[ 256 ]; /* increased to avoid overflow */
 osStaticThreadDef_t controlBlocTaskCli;
 const osThreadAttr_t cli_attributes = {
   .name = "cli",
