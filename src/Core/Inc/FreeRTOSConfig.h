@@ -152,6 +152,10 @@ standard names. */
 
 /* USER CODE BEGIN Defines */
 /* Section where parameter definitions can be added (for instance, to override default ones in FreeRTOS.h) */
+
+/* FreeRTOS+CLI configuration */
+#define configCOMMAND_INT_MAX_OUTPUT_SIZE    512
+
 /* USER CODE END Defines */
 
 #endif /* __FREERTOS_CONFIG_H */

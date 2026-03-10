@@ -33,6 +33,16 @@ Use it to clarify coding standards, project structure, preferred libraries, and 
 - Document all functions with comments or docstrings.
 - Prefer standard libraries unless otherwise specified.
 - For FreeRTOS, use CMSIS RTOS v2 API when possible.
+- Follow K&R style for C code formatting for control statements:
+```c
+    if (condition) {
+        // code
+    } else if (other_condition) {
+        // code
+    } else {
+        // code
+    }
+```
 
 ---
 

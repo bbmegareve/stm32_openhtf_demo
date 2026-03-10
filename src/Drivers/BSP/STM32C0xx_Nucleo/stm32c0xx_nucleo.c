@@ -770,6 +770,10 @@ static void COM1_MspInit(UART_HandleTypeDef *huart)
   gpio_init_structure.Mode      = GPIO_MODE_AF_PP;
   gpio_init_structure.Alternate = COM1_RX_AF;
   HAL_GPIO_Init(COM1_RX_GPIO_PORT, &gpio_init_structure);
+  
+  /* Enable USART2 interrupt in NVIC */
+  HAL_NVIC_SetPriority(USART2_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(USART2_IRQn);
 }
 
 /**
@@ -790,6 +794,9 @@ static void COM1_MspDeInit(UART_HandleTypeDef *huart)
 
   gpio_init_structure.Pin  = COM1_RX_PIN;
   HAL_GPIO_DeInit(COM1_RX_GPIO_PORT, gpio_init_structure.Pin);
+
+  /* Disable USART2 interrupt */
+  HAL_NVIC_DisableIRQ(USART2_IRQn);
 
   /* Disable USART clock */
   COM1_CLK_DISABLE();

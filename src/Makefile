@@ -36,6 +36,8 @@ BUILD_DIR = build
 ######################################
 # C sources
 C_SOURCES =  \
+app/cli_demo/cli_demo.c \
+app/cli_demo/task_cli.c \
 Core/Src/main.c \
 Core/Src/gpio.c \
 Core/Src/app_freertos.c \
@@ -43,6 +45,9 @@ Core/Src/fdcan.c \
 Core/Src/stm32c0xx_it.c \
 Core/Src/stm32c0xx_hal_msp.c \
 Core/Src/stm32c0xx_hal_timebase_tim.c \
+Core/Src/sysmem.c \
+Core/Src/syscalls.c  \
+Core/Src/system_stm32c0xx.c \
 Drivers/BSP/STM32C0xx_Nucleo/stm32c0xx_nucleo.c \
 Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_tim.c \
 Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_tim_ex.c \
@@ -63,7 +68,6 @@ Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_usart.c \
 Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_usart_ex.c \
 Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_uart_ex.c \
 Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_uart.c \
-Core/Src/system_stm32c0xx.c \
 Middlewares/Third_Party/FreeRTOS/Source/croutine.c \
 Middlewares/Third_Party/FreeRTOS/Source/event_groups.c \
 Middlewares/Third_Party/FreeRTOS/Source/list.c \
@@ -74,9 +78,8 @@ Middlewares/Third_Party/FreeRTOS/Source/timers.c \
 Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c \
 Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM0/port.c \
 Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM0/portasm.c \
-Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_5.c \
-Core/Src/sysmem.c \
-Core/Src/syscalls.c  
+Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c \
+Middlewares/Third_Party/FreeRTOS-Plus/Source/FreeRTOS-Plus-CLI/FreeRTOS_CLI.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -136,6 +139,8 @@ C_DEFS =  \
 
 # AS includes
 AS_INCLUDES =  \
+-Iapp \
+-Iapp/cli_demo \
 -ICore/Inc \
 -IDrivers/STM32C0xx_HAL_Driver/Inc \
 -IDrivers/STM32C0xx_HAL_Driver/Inc/Legacy \
@@ -145,10 +150,13 @@ AS_INCLUDES =  \
 -IMiddlewares/Third_Party/FreeRTOS/Source/include/ \
 -IMiddlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/ \
 -IMiddlewares/Third_Party/CMSIS/RTOS2/Include/ \
--IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM0/
+-IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM0/ \
+-IMiddlewares/Third_Party/FreeRTOS-Plus/Source/FreeRTOS-Plus-CLI/ 
 
 # C includes
 C_INCLUDES =  \
+-Iapp \
+-Iapp/cli_demo \
 -ICore/Inc \
 -IDrivers/STM32C0xx_HAL_Driver/Inc \
 -IDrivers/STM32C0xx_HAL_Driver/Inc/Legacy \
@@ -158,6 +166,8 @@ C_INCLUDES =  \
 -IMiddlewares/Third_Party/FreeRTOS/Source/include/ \
 -IMiddlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/ \
 -IMiddlewares/Third_Party/CMSIS/RTOS2/Include/ \
+-IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM0/ \
+-IMiddlewares/Third_Party/FreeRTOS-Plus/Source/FreeRTOS-Plus-CLI/ \
 -IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM0/
 
 
@@ -230,7 +240,7 @@ $(BUILD_DIR):
 #######################################
 flash: all
 	@echo "Flashing App " $(BUILD_DIR)/$(TARGET).hex
-	STM32_Programmer_CLI -c port=SWD reset=HWrst -w $(BUILD_DIR)/$(TARGET).hex -g
+	STM32_Programmer_CLI -c port=SWD sn=066EFF555748847187014150 reset=HWrst -w $(BUILD_DIR)/$(TARGET).hex -g
 
 #######################################
 # clean up

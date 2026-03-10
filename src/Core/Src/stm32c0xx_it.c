@@ -56,6 +56,7 @@
 
 /* External variables --------------------------------------------------------*/
 extern TIM_HandleTypeDef htim1;
+extern UART_HandleTypeDef hcom_uart[];
 
 /* USER CODE BEGIN EV */
 
@@ -130,5 +131,20 @@ void TIM1_BRK_UP_TRG_COM_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
+
+/**
+  * @brief This function handles USART2 global interrupt.
+  */
+void USART2_IRQHandler(void)
+{
+  /* USER CODE BEGIN USART2_IRQn 0 */
+  static uint32_t irq_count = 0;
+  irq_count++;  /* just to verify interrupt is called */
+  /* USER CODE END USART2_IRQn 0 */
+  HAL_UART_IRQHandler(&hcom_uart[0]); /* COM1 is index 0 */
+  /* USER CODE BEGIN USART2_IRQn 1 */
+
+  /* USER CODE END USART2_IRQn 1 */
+}
 
 /* USER CODE END 1 */
