@@ -41,10 +41,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 void TaskCli(void *argument)
 {
     uint8_t localChar;
-    
+
     /* Small delay to ensure UART is fully initialized */
     osDelay(100);
-    
+
     /* Initialize CLI */
     CLI_Init();
     
