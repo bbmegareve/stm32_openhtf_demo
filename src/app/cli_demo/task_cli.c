@@ -25,8 +25,7 @@ static volatile uint8_t rxReady = 0;
   */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-    if (huart == &hcom_uart[COM1])
-    {
+    if (huart == &hcom_uart[COM1]) {
         /* Set flag to indicate character received */
         rxReady = 1;
         /* Immediately restart reception for next character */
@@ -56,11 +55,9 @@ void TaskCli(void *argument)
     HAL_UART_Receive_IT(&hcom_uart[COM1], &rxChar, 1);
     
     /* Infinite loop */
-    for(;;)
-    {
+    for(;;) {
         /* Check if a character was received */
-        if (rxReady)
-        {
+        if (rxReady) {
             /* Copy character locally and clear flag immediately */
             taskENTER_CRITICAL();
             localChar = rxChar;

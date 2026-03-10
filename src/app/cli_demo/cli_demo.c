@@ -107,10 +107,8 @@ void CLI_ProcessInput(char c)
     BaseType_t xMoreDataToFollow;
     
     /* Handle backspace */
-    if (c == '\b' || c == 0x7F)
-    {
-        if (usInputIndex > 0)
-        {
+    if (c == '\b' || c == 0x7F) {
+        if (usInputIndex > 0) {
             usInputIndex--;
             cInputBuffer[usInputIndex] = '\0';
             CLI_Print("\b \b"); /* Erase character on terminal */
@@ -122,19 +120,16 @@ void CLI_ProcessInput(char c)
     HAL_UART_Transmit(&hcom_uart[0], (uint8_t*)&c, 1, 100);
     
     /* Handle carriage return / newline */
-    if (c == '\r' || c == '\n')
-    {
+    if (c == '\r' || c == '\n') {
         CLI_Print("\r\n");
         
         /* Process command if buffer is not empty */
-        if (usInputIndex > 0)
-        {
+        if (usInputIndex > 0) {
             /* Null terminate the input string */
             cInputBuffer[usInputIndex] = '\0';
             
             /* Process the command */
-            do
-            {
+            do {
                 xMoreDataToFollow = FreeRTOS_CLIProcessCommand(
                     cInputBuffer,
                     cOutputBuffer,
@@ -153,12 +148,9 @@ void CLI_ProcessInput(char c)
         
         /* Print prompt */
         CLI_Print("> ");
-    }
-    /* Handle regular characters */
-    else if (c >= 32 && c <= 126)
-    {
-        if (usInputIndex < (CLI_INPUT_BUFFER_SIZE - 1))
-        {
+    } else if (c >= 32 && c <= 126) {
+         /* Handle regular characters */
+        if (usInputIndex < (CLI_INPUT_BUFFER_SIZE - 1)) {
             cInputBuffer[usInputIndex] = c;
             usInputIndex++;
         }
