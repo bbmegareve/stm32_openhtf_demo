@@ -1,0 +1,59 @@
+# Hardware Configuration for Functional Tests
+
+# ST-Link Programmer Configuration
+stlink:
+  # Serial number for specific device (null = auto-detect first device)
+  serial_number: null
+  
+  # SWD interface configuration
+  interface: SWD
+  
+  # Reset mode: hw_reset, sw_reset, or core_reset
+  reset_mode: hw_reset
+  
+  # STM32CubeProgrammer CLI path
+  # Common paths:
+  #   Linux:   /opt/st/stm32cubeclt_1.15.1/STM32CubeProgrammer/bin/STM32_Programmer_CLI
+  #   Windows: C:\Program Files\STMicroelectronics\STM32Cube\STM32CubeProgrammer\bin\STM32_Programmer_CLI.exe
+  #   macOS:   /Applications/STMicroelectronics/STM32Cube/STM32CubeProgrammer/STM32CubeProgrammer.app/Contents/MacOs/bin/STM32_Programmer_CLI
+  # Set to "STM32_Programmer_CLI" to use from PATH
+  programmer_cli: "/opt/st/stm32cubeclt_1.15.1/STM32CubeProgrammer/bin/STM32_Programmer_CLI"
+
+# Serial Console Configuration
+serial:
+  # Serial port device (Linux: /dev/ttyUSB0, Windows: COM3)
+  port: /dev/ttyUSB0
+  
+  # Baudrate (must match firmware UART configuration)
+  baudrate: 115200
+  
+  # Read timeout in seconds
+  timeout: 1.0
+  
+  # Maximum log buffer size (lines)
+  max_log_lines: 10000
+
+
+# Flash Memory Layout
+flash:
+  # Application region 
+  app_address: 0x08000000
+  app_size: 0x30000  # 192KB
+  
+  # Reserved region
+  rsv_address: 0x0803F800
+  rsv_size: 0x800  # 2KB
+ 
+
+# Power Supply Configuration (optional)
+power_supply:
+  # Enable power supply control
+  enabled: false
+  
+  # Power supply type: programmable, relay, or manual
+  type: manual
+  
+  # Device-specific settings (depends on type)
+  device: null
+  voltage: 3.3
+  current_limit: 0.5

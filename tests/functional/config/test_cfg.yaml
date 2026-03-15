@@ -1,0 +1,93 @@
+# Test Execution Configuration
+
+# Test Timeouts (seconds)
+timeouts:
+  # Maximum time for firmware download
+  download: 60
+  
+  # Maximum time for flash write operations
+  flash_write: 30
+  
+  # Maximum time for device boot
+  boot: 10
+  
+  # Pattern search timeout in serial logs
+  pattern_search: 15
+
+# Retry Configuration
+retries:
+  # Maximum retry attempts for operations
+  max_attempts: 3
+  
+  # Delay between retry attempts (seconds)
+  delay: 2
+  
+  # Enable exponential backoff
+  exponential_backoff: false
+
+# Performance Thresholds
+thresholds:
+  # Maximum acceptable download time (seconds)
+  download_time_max: 45.0
+  
+  # Maximum acceptable flash write time (seconds)
+  flash_write_time_max: 20.0
+  
+  # Maximum acceptable boot time (seconds)
+  boot_time_max: 5.0
+
+
+# Test Data Paths
+# Base directory for test binaries
+base_dir: test_binaries
+
+# Firmware binaries directory
+firmwares_dir: test_binaries/firmwares
+
+# Main release firmware hex file 
+main_firmware_hex: "test_binaries/release/can_sensors_demo.hex"
+
+# Nightly or draft build firmware hex file 
+nightly_firmware_hex: "test_binaries/draft/can_sensors_demo.hex"
+
+# Test Reporting
+reporting:
+  # Report output directory
+  output_dir: reports
+  
+  # Report format: json, html, or both
+  format: json
+  
+  # Enable detailed measurements logging
+  detailed_measurements: true
+  
+  # Include serial console logs in report
+  include_serial_logs: true
+  
+  # Maximum log lines in report
+  max_log_lines_in_report: 1000
+
+# Test Selection
+test_selection:
+  # Test priority levels to run (P1, P2, P3)
+  priorities: [P1, P2]
+  
+  # Skip tests marked as flaky
+  skip_flaky: false
+  
+  # Skip tests requiring optional hardware
+  skip_optional_hw: true
+
+# Debugging
+debug:
+  # Enable verbose logging
+  verbose: true
+  
+  # Pause before starting tests (for manual setup)
+  pause_before_start: false
+  
+  # Pause after test failure (for debugging)
+  pause_on_failure: false
+  
+  # Save flash dumps on failure
+  save_flash_dump_on_failure: true
