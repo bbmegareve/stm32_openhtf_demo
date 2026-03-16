@@ -21,8 +21,8 @@ stlink:
 
 # Serial Console Configuration
 serial:
-  # Serial port device (Linux: /dev/ttyUSB0, Windows: COM3)
-  port: /dev/ttyUSB0
+  # Serial port device (Linux: /dev/ttyACM0, Windows: COM3)
+  port: /dev/ttyACM0
   
   # Baudrate (must match firmware UART configuration)
   baudrate: 115200

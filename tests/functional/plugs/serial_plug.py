@@ -10,6 +10,8 @@ import threading
 import logging
 import time
 import re
+import yaml
+from pathlib import Path
 from typing import Optional, List
 from collections import deque
 
@@ -17,31 +19,49 @@ import openhtf as htf
 from openhtf.plugs import BasePlug
 
 
+def _load_hardware_config():
+    """ 
+    Helper function to load hardware configuration
+    from YAML file.
+    """
+    config_path = Path(__file__).parent.parent / 'config' / 'hw_cfg.yaml'
+    with open(config_path, 'r') as f:
+        return yaml.safe_load(f)
+
+
 class SerialConsolePlug(BasePlug):
     """Plug for monitoring STM32 serial console output."""
     
-    def __init__(self, port: str = "/dev/ttyACM0", baudrate: int = 115200, 
-                 timeout: float = 1.0, max_log_lines: int = 10000):
+    def __init__(self, port: Optional[str] = None, baudrate: Optional[int] = None, 
+                 timeout: Optional[float] = None, max_log_lines: int = 10000):
         """
         Initialize Serial Console plug.
         
         Args:
-            port: Serial port device path
-            baudrate: Serial baudrate (default: 115200)
-            timeout: Read timeout in seconds
+            port: Serial port device path (None = load from config)
+            baudrate: Serial baudrate (None = load from config)
+            timeout: Read timeout in seconds (None = load from config)
             max_log_lines: Maximum lines to keep in log buffer
         """
         super(SerialConsolePlug, self).__init__()
-        self.port = port
-        self.baudrate = baudrate
-        self.timeout = timeout
+        
+        # Load hardware config if parameters not provided
+        if port is None or baudrate is None or timeout is None:
+            config = _load_hardware_config()
+            self.port = port if port is not None else config['serial']['port']
+            self.baudrate = baudrate if baudrate is not None else config['serial']['baudrate']
+            self.timeout = timeout if timeout is not None else config['serial']['timeout']
+        else:
+            self.port = port
+            self.baudrate = baudrate
+            self.timeout = timeout
+            
         self.max_log_lines = max_log_lines
         
         self.serial_conn: Optional[serial.Serial] = None
         self.log_buffer: deque = deque(maxlen=max_log_lines)
         self.reader_thread: Optional[threading.Thread] = None
         self.running = False
-        self.logger = logging.getLogger(__name__)
         
     def setUp(self):
         """Set up serial connection and start reader thread."""

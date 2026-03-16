@@ -54,7 +54,7 @@ def setup_logging(verbose: bool = False):
     file_handler = logging.FileHandler(PROJECT_ROOT / 'logs' / 'test_runner.log')
     file_handler.setLevel(logging.DEBUG)
     file_handler.setFormatter(
-        logging.Formatter('%(levelname).1s %(asctime)s %(name)s - %(message)s',
+        logging.Formatter('%(levelname).1s %(asctime)s.%(msecs)03d %(name)s - %(message)s',
                         datefmt='%H:%M:%S')
     )
     logging.getLogger('openhtf.test_record').addHandler(file_handler)
@@ -65,7 +65,7 @@ def setup_logging(verbose: bool = False):
         console_handler = logging.StreamHandler(sys.stdout)
         console_handler.setLevel(logging.DEBUG)
         console_handler.setFormatter(
-            logging.Formatter('%(levelname).1s %(asctime)s %(name)s - %(message)s',
+            logging.Formatter('%(levelname).4s %(asctime)s.%(msecs)03d - %(message)s',
                             datefmt='%H:%M:%S')
         )
         logging.getLogger('openhtf.test_record').addHandler(console_handler)
