@@ -17,6 +17,56 @@ This can serve as a starting point for the development of a comprehensive test s
 
 ## 3 Architecture
 
+This framework is built on top of **OpenHTF**. The key pattern is:
+
+- **Test runner** executes **test cases**.
+- A **test case** is composed of one or more **test phases**.
+- **Test phases** use **hardware plugs** (for ST-Link, serial, etc.) and **utilities** to perform work.
+- The runner reads **configuration** and writes **reports** + **logs**.
+
+### Block Diagram (architecture)
+
+```mermaid
+graph TB
+    subgraph DUT[Device Under Test]
+        DUTNode["STM32 Nucleo Board"]
+    end
+
+    subgraph Tools[Hardware/Tools]
+        STLink["ST-Link (SWD)"]
+        Serial["UART / Serial Console"]
+    end
+
+    subgraph Software[Host Software]
+        PC["Engineer PC"]
+        Runner["OpenHTF Test Runner"]
+        TestCases["Test Cases (tests/)"]
+        Phases["Test Phases (test_phases/)"]
+        Utils["Utilities (framework/)"]
+        Config["Config Files (config/)"]
+        Reports["Reports (reports/)"]
+        Logs["Logs (logs/)"]
+    end
+
+    PC -->|run tests| Runner
+    Runner --> TestCases
+    TestCases --> Phases
+    Phases --> Utils
+    Phases --> STLink
+    Phases --> Serial
+
+    STLink --> DUTNode
+    Serial --> DUTNode
+
+    DUTNode -->|logs/console| Runner
+
+    Runner --> Config
+    Runner --> Reports
+    Runner --> Logs
+```
+
+### Folder layout (physical view)
+
 ```
 tests/functional/
 ├── plugs/              # Equipment/Tools abstraction layer (programming, Command Line terminal access, CAN interface, Measurement tools, etc.)
