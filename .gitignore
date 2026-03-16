@@ -62,3 +62,8 @@ src/build
 
 # vscode
 .vscode/
+
+# Ignore logs and report from test runs
+tests/functional/logs/
+tests/functional/reports/
+tests/functional/venv/
