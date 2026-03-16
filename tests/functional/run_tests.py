@@ -242,6 +242,13 @@ Examples:
         default='reports',
         help='Directory for test reports (default: reports/)'
     )
+
+    parser.add_argument(
+        '--firmware-target',
+        choices=['nightly', 'main'],
+        default='nightly',
+        help='Which firmware target to copy before running tests (nightly/main)'
+    )
     
     args = parser.parse_args()
     
@@ -266,6 +273,14 @@ Examples:
     logger.info("       Hardware-in-the-Loop Testing")
     logger.info("_/" * 40)
     
+# Ensure the latest built firmware is copied into the test folder (as configured)
+    try:
+        # Import lazily to avoid adding test dependencies for non-test users
+        from framework import src_draft_get
+        src_draft_get.main(['--target', args.firmware_target])
+    except Exception as e:
+        logger.warning("Could not copy firmware draft: %s", e)
+
     # Run tests
     try:
         if args.test:

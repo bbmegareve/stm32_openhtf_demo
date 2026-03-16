@@ -41,6 +41,9 @@ thresholds:
 # Base directory for test binaries
 base_dir: test_binaries
 
+# application firmaware name
+app_firmware_name: can_sensors_demo.hex
+
 # Firmware binaries directory
 firmwares_dir: test_binaries/firmwares
 
