@@ -65,22 +65,22 @@ void MX_ADC1_Init(void)
     Error_Handler();
   }
 
-  /** Configure Regular Channel: temperature sensor only
+  /** Configure Regular Channel
   */
   sConfig.Channel = ADC_CHANNEL_TEMPSENSOR;
   sConfig.Rank = ADC_RANK_CHANNEL_NUMBER;
-  /* use extended sampling time for the high‑impedance internal sensor
-     (C0 devices only support up to 160.5 cycles) */
-  sConfig.SamplingTime = ADC_SAMPLETIME_160CYCLES_5;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     Error_Handler();
   }
 
-  /* Note: VREFINT channel was previously configured here by CubeMX, but that
-     overwrote the temperature channel when NbrOfConversion was 1.  The CLI
-     code performs any VREFINT measurement manually when needed, so leave the
-     default setup with only the temp sensor. */
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_VREFINT;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
   /* USER CODE BEGIN ADC1_Init 2 */
 
   /* USER CODE END ADC1_Init 2 */
@@ -133,3 +133,4 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */
+

@@ -795,9 +795,6 @@ static void COM1_MspDeInit(UART_HandleTypeDef *huart)
   gpio_init_structure.Pin  = COM1_RX_PIN;
   HAL_GPIO_DeInit(COM1_RX_GPIO_PORT, gpio_init_structure.Pin);
 
-  /* Disable USART2 interrupt */
-  HAL_NVIC_DisableIRQ(USART2_IRQn);
-
   /* Disable USART clock */
   COM1_CLK_DISABLE();
 }
