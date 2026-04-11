@@ -1,0 +1,23 @@
+# Functional Test Framework Dependencies
+# OpenHTF-based Hardware-in-the-Loop Testing for STM32 OTA Bootloader
+
+# Core testing framework (latest stable version)
+openhtf>=1.6.1
+
+# Hardware communication
+pyserial>=3.5
+
+# Configuration management
+pyyaml>=6.0
+
+# Binary file handling
+intelhex>=2.3.0
+
+# HTTP server for test mocking (optional)
+flask>=3.0.0
+
+# Data validation and utilities
+requests>=2.31.0
+
+# For bin2ota.py tool integration
+hexdump>=3.3

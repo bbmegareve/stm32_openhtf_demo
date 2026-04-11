@@ -88,7 +88,7 @@ static BaseType_t prvTempCommand(char *pcWriteBuffer,
 static const CLI_Command_Definition_t xUIDCommand =
 {
     "uid",
-    "\r\nuid:\r\n  Print unique device ID (96‑bit)\r\n\r\n",
+    "\r\nuid:\r\n  Print unique device ID (96-bit)\r\n\r\n",
     prvUIDCommand,
     0
 };
@@ -104,7 +104,7 @@ static const CLI_Command_Definition_t xDevInfoCommand =
 static const CLI_Command_Definition_t xTempCommand =
 {
     "temp",
-    "\r\ntemp:\r\n  Read internal temperature sensor (°C)\r\n\r\n",
+    "\r\ntemp:\r\n  Read internal temperature sensor (deg C)\r\n\r\n",
     prvTempCommand,
     0
 };
