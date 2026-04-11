@@ -234,7 +234,7 @@ class SerialConsolePlug(BasePlug):
             cmd_bytes = (command + '\n').encode('utf-8')
             self.serial_conn.write(cmd_bytes)
             self.serial_conn.flush()
-            self.logger.info(f"UART CLI Sent command: {command}")
+            self.logger.info(f"UART CLI TX: {command}")
         else:
             self.logger.error("UART CLI port not open, cannot send command")
     
