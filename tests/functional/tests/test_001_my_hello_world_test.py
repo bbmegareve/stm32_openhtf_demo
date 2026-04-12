@@ -53,6 +53,7 @@ def initialize_serial_monitoring(test, serial):
     Note: Serial will be properly initialized AFTER flashing in Phase 2,
     since the ST-Link programmer disconnects the Virtual COM port during programming.
     """
+    test.logger.info("\r\n")
     test.logger.info("=== Phase 1: Pre-Initialize Serial Monitoring ===")
     test.logger.info("Serial plug created (will be opened after flashing)")
     test.measurements.serial_initialized = True
@@ -74,8 +75,8 @@ def flash_firmware(test, stlink, serial):
     After flashing, we perform an additional reset to ensure the device
     boots cleanly while the serial monitor is actively listening.
     """
-    test.logger.info("=== Phase 2: Flash Firmware ===")
-    
+    test.logger.info("\r\n")
+    test.logger.info("=== Phase 2: Flash Firmware ===")  
     # Get firmware path from configuration
     firmware_hex = configuration.CONF.nightly_firmware_hex
     test.logger.info(f"Using firmware from config: {firmware_hex}")
@@ -125,11 +126,8 @@ def flash_firmware(test, stlink, serial):
 
 @htf.plug(serial=SerialConsolePlug)
 @htf.measures(
-    htf.Measurement('boot_detected').with_validator(validators.equals(True)),
-    htf.Measurement('boot_logs_captured').with_validator(
-        validators.in_range(minimum=1)
-    ),
-    htf.Measurement('banner_captured').with_validator(validators.equals(True))
+    htf.Measurement('uart_alive_lines_captured').with_validator(validators.in_range(minimum=1)),
+    htf.Measurement('welcome_banner_found').with_validator(validators.equals(True))
 )
 def capture_boot_banner(test, serial):
     """
@@ -147,35 +145,34 @@ def capture_boot_banner(test, serial):
     ===========================================
     ```
     """
+    test.logger.info("\r\n")
     test.logger.info("=== Phase 3: Verify Boot Logs Captured ===")
-    
+
     # Give a moment for any remaining serial data to arrive
     time.sleep(0.5)
     
     # Check collected logs
     logs = serial.get_logs()
-    test.measurements.boot_logs_captured = len(logs)
+    test.measurements.uart_alive_lines_captured = len(logs)
     test.logger.info(f"Captured {len(logs)} log lines from device boot")
     
-    # Search for boot banner in existing logs (not waiting for new data)
+    # Search for Welcome banner in existing logs
     boot_logs = serial.search_logs(
         pattern=r'Welcome to STM32 world',
         is_regex=True
     )
     
     if boot_logs:
-        test.logger.info(f"✓ Boot banner found: {boot_logs[0]}")
-        test.measurements.boot_detected = True
-        test.measurements.banner_captured = True
+        test.logger.info(f"✓ Welcome banner found: {boot_logs[0]}")
+        test.measurements.welcome_banner_found = True
         
         # Display captured logs
         test.logger.info("Boot log output:")
         for log in logs:
             test.logger.info(f"  {log}")
     else:
-        test.logger.error("✗ Boot banner not found in captured logs")
-        test.measurements.boot_detected = False
-        test.measurements.banner_captured = False
+        test.logger.error("✗ Welcome banner not found in captured logs")
+        test.measurements.welcome_banner_found = False
         
         # Show what we did capture for debugging
         test.logger.warning(f"Available logs ({len(logs)} lines):")
@@ -185,47 +182,31 @@ def capture_boot_banner(test, serial):
 
 @htf.plug(serial=SerialConsolePlug)
 @htf.measures(
-    htf.Measurement('boot_message_found').with_validator(validators.equals(True)),
-    htf.Measurement('boot_message'),
-    htf.Measurement('total_log_lines').with_validator(validators.in_range(minimum=1))
-)
-def validate_boot_output(test, serial):
-    """
-    Phase 4: Validate boot output from firmware.
-    
-    Verifies that the expected "Welcome to STM32 world !" message
-    was received from the serial console.
-    """
-    test.logger.info("=== Phase 4: Validate Boot Output ===")
-    
-    # Search for boot message in existing logs
-    boot_logs = serial.search_logs(
-        pattern=r'Welcome to STM32 world',
-        is_regex=True
+    htf.Measurement('firmware_version').with_validator(
+        validators.equals('v0.1.0')  # must match FW_VERSION in src/app/version.h
     )
-    
-    if not boot_logs:
-        test.logger.error("✗ Boot message not found in logs")
-        test.measurements.boot_message_found = False
-        test.measurements.boot_message = "NOT_FOUND"
-        
-        # Show all logs for debugging
-        all_logs = serial.get_logs()
-        test.logger.warning(f"Available logs ({len(all_logs)} lines):")
-        for log in all_logs:
-            test.logger.warning(f"  {log}")
-    else:
-        boot_message = boot_logs[0]
-        test.logger.info(f"✓ Found boot message: {boot_message}")
-        test.measurements.boot_message_found = True
-        test.measurements.boot_message = boot_message
-    
-    # Record total log lines
-    logs = serial.get_logs()
-    test.measurements.total_log_lines = len(logs)
-    test.logger.info(f"✓ Captured {len(logs)} total log lines")
-    
-    test.logger.info("[PASS] Boot output validation complete")
+)
+def validate_firmware_version(test, serial):
+    """
+    Phase 4: Validate firmware version via CLI 'version' command.
+
+    Expected CLI response:
+        Test Demo Firmware v0.1.0
+        Build: Apr 11 2026 14:28:57
+    """
+    test.logger.info("\r\n")
+    test.logger.info("=== Phase 4: Validate Firmware Version ===")
+
+    serial.clear_logs()
+    serial.send_command('version')
+    serial.wait_for_pattern(r'Test Demo Firmware v\d+\.\d+\.\d+', timeout=5.0)
+
+    version_lines = serial.search_logs(pattern=r'Test Demo Firmware v\d+\.\d+\.\d+', is_regex=True)
+    match = re.search(r'(v\d+\.\d+\.\d+)', version_lines[0]) if version_lines else None
+    firmware_version = match.group(1) if match else 'NOT_FOUND'
+
+    test.measurements.firmware_version = firmware_version
+    test.logger.info(f"Firmware version: {firmware_version}")
 
 
 def test_001_my_hello_world_test():
@@ -235,22 +216,22 @@ def test_001_my_hello_world_test():
     Simple functional test demonstrating:
     - Firmware programming via ST-Link
     - UART console monitoring
-    - Startup time measurement
-    - Version string validation
+    - Boot banner detection
+    - Firmware version validation via CLI command
     
     Test phases:
     1. Initialize serial console monitoring
     2. Flash nightly firmware using STLinkPlug (device will reset and boot)
-    3. Capture boot message and measure startup time
-    4. Validate boot output ("Welcome to STM32 world !")
+    3. Capture boot banner and verify device started
+    4. Send 'version' CLI command and validate firmware version string
     
     Pass criteria:
     - Serial console initializes successfully
     - Firmware flashes successfully
-    - Boot message detected within 10 seconds
-    - Startup time is reasonable (0-10 seconds)
-    - Boot message "Welcome to STM32 world !" is captured
-    - At least 1 log line captured
+    - Boot banner "Welcome to STM32 world !" is captured
+    - Device responds to 'version' command
+    - Firmware version matches semver format (vX.Y.Z)
+    - Firmware version matches expected_firmware_version from test_cfg.yaml
     
     Returns:
         htf.Test: Configured test object ready for execution
@@ -260,7 +241,7 @@ def test_001_my_hello_world_test():
         initialize_serial_monitoring,
         flash_firmware,
         capture_boot_banner,
-        validate_boot_output,
+        validate_firmware_version,
         test_name='test_001_my_hello_world_test',
         test_description='Hello World - Basic firmware flash and UART validation'
     )

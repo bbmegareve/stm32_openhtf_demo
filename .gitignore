@@ -63,6 +63,10 @@ src/build
 # vscode
 .vscode/
 
+#python stuff
+__pycache__/
+*.pyc
+
 # Ignore logs and report from test runs
 tests/functional/logs/
 tests/functional/reports/

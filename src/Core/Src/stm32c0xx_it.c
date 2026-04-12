@@ -56,10 +56,9 @@
 
 /* External variables --------------------------------------------------------*/
 extern TIM_HandleTypeDef htim1;
-extern UART_HandleTypeDef hcom_uart[];
 
 /* USER CODE BEGIN EV */
-
+extern UART_HandleTypeDef hcom_uart[];
 /* USER CODE END EV */
 
 /******************************************************************************/
