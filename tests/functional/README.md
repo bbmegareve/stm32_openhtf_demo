@@ -108,21 +108,27 @@ The following directories are automatically created by the setup script:
 
 ## 5 Installation
 
-### Option A) setup script:
+### Option A) setup script (recommended):
 
-Install the required software and dependencies by running the setup script:
+Install the required software and dependencies by running the one-step setup script:
 
 ```bash
 cd tests/functional
 ./setup.sh
 ```
 
-This script will:
-1. Check Python installation
-2. Create a virtual environment in `venv/`
-3. Install all dependencies from `requirements.txt`
-4. Verify STM32CubeProgrammer CLI is available
-5. Test the framework infrastructure
+The script performs these steps automatically:
+1. **Check Python 3** — confirms `python3` is available
+2. **Create virtual environment** — creates `venv/` (skipped if it already exists)
+3. **Activate virtual environment** — sources `venv/bin/activate`
+4. **Upgrade pip** — ensures the latest pip is used
+5. **Install Python dependencies** — runs `pip install -r requirements.txt` (openhtf, pyserial, pyyaml, …)
+6. **Verify key packages** — imports openhtf, pyserial, pyyaml and prints their versions
+7. **Create output directories** — creates `logs/` and `reports/` if they do not exist
+8. **Check STM32CubeProgrammer CLI** — warns if `STM32_Programmer_CLI` is not found in PATH
+9. **Smoke-test the runner** — runs `python3 run_tests.py --list` to confirm the framework loads
+
+At the end, the script prints the available `run_tests.py` commands as a quick reference.
 
 ### Option B) Do it yourself manual setup
 
